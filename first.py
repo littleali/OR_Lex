@@ -44,18 +44,19 @@ precedence = (
     ('left','*','/'),
     ('right','UMINUS'),
     )
-
+from sets import Set 
 # dictionary of variables
+variables = Set([])
 x_matrix = []
 c_matrix = []
-b_matrix = []
+b_matrix = [[]]
 a_matrix = [[]]
 
 l_o_e = {}
 g_o_e = {}
 l_t = {}
 g_t = {}
-
+tmp = {}
 
 goal = ''
 
@@ -75,14 +76,12 @@ def p_statement_subject(p):
     statement '=' NUMBER | 
     statement '<=' NUMBER | 
     statement '>=' NUMBER '''
-    if p[1] == 'max' : goal = 'max'
-    elif p[1] == 'min' : goal = 'min'
+    if p[2] == '=' || p[2] == '<=' || p[2] == '>=' :b.add[ p[2] , p[3] ]
+    elif # propagate statement
     
 def p_statement_statement(p):
-    '''statement: NUMBER VARIABLE '+' | NUMBER VARIABLE '-' | NUMBER VARIABLE  | 
-        VARIABLE '+' | VARIABLE '-' | VARIABLE'''
-    if p[1] == 'max' : goal = 'max'
-    elif p[1] == 'min' : goal = 'min'
+    '''statement: NUMBER VARIABLE '+' | NUMBER VARIABLE '-' | NUMBER VARIABLE  '''
+    
     
 
 def p_statement_constraint(p):
@@ -90,6 +89,7 @@ def p_statement_constraint(p):
     VARIABLE '>=' NUMBER | 
     VARIABLE '<' NUMBER | 
     VARIABLE '>' NUMBER  '''
+    variables.add(p[1])
     if p[1] == '<=' : l_o_e[p[1]] = p[3]
     elif p[1] == '>=' : g_o_e[p[1]] = p[3]
     elif p[1] == '<' : l_t[p[1]] = p[3]
