@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = '\x91\x95\xa5\xf7\xe0^bz\xc0\xf4\x04\xf9Z\xebA\xba'
+_lr_signature = "\x8bx\x02\xd6\x9d\x84\x1d\xf4D'\xc8\x8c.GIF"
     
-_lr_action_items = {'NAME':([0,2,5,7,11,12,13,14,],[1,8,8,8,8,8,8,8,]),')':([3,8,9,10,16,17,18,19,20,],[-9,-10,-7,16,-8,-4,-3,-5,-6,]),'(':([0,2,5,7,11,12,13,14,],[5,5,5,5,5,5,5,5,]),'+':([1,3,6,8,9,10,15,16,17,18,19,20,],[-10,-9,12,-10,-7,12,12,-8,-4,-3,-5,-6,]),'*':([1,3,6,8,9,10,15,16,17,18,19,20,],[-10,-9,13,-10,-7,13,13,-8,13,13,-5,-6,]),'-':([0,1,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,],[2,-10,2,-9,2,11,2,-10,-7,11,2,2,2,2,11,-8,-4,-3,-5,-6,]),'NUMBER':([0,2,5,7,11,12,13,14,],[3,3,3,3,3,3,3,3,]),'/':([1,3,6,8,9,10,15,16,17,18,19,20,],[-10,-9,14,-10,-7,14,14,-8,14,14,-5,-6,]),'=':([1,],[7,]),'$end':([1,3,4,6,8,9,15,16,17,18,19,20,],[-10,-9,0,-2,-10,-7,-1,-8,-4,-3,-5,-6,]),}
+_lr_action_items = {'GT':([3,8,14,17,18,24,],[-17,-16,21,-12,-13,31,]),'NAME':([0,1,4,6,7,9,10,11,15,19,25,],[1,3,8,3,3,3,-2,3,3,-3,3,]),'NUMBER':([1,6,7,9,10,11,15,19,21,22,23,25,26,31,32,33,],[4,4,4,4,-2,4,4,-3,28,28,28,4,28,28,28,28,]),',':([16,27,28,29,30,35,36,37,38,],[25,-8,-15,-7,-6,-14,-11,-10,-9,]),'LT':([3,8,14,17,18,24,],[-17,-16,22,-12,-13,32,]),'PLUS':([3,5,8,12,14,17,18,24,],[-17,9,-16,9,9,-12,-13,9,]),';':([3,5,8,12,13,16,17,18,27,28,29,30,34,35,36,37,38,],[-17,10,-16,19,20,-5,-12,-13,-8,-15,-7,-6,-4,-14,-11,-10,-9,]),'EQ':([3,8,14,17,18,24,],[-17,-16,23,-12,-13,33,]),'MINUS':([1,3,5,7,8,10,12,14,17,18,19,21,22,23,24,25,26,31,32,33,],[6,-17,11,15,-16,-2,11,11,-12,-13,-3,26,26,26,11,15,26,26,26,26,]),'$end':([2,20,],[0,-1,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,2,5,7,11,12,13,14,],[6,9,10,15,17,18,19,20,]),'statement':([0,],[4,]),}
+_lr_goto_items = {'goal':([1,],[7,]),'value':([21,22,23,26,31,32,33,],[27,29,30,35,36,37,38,]),'subjects':([7,25,],[13,34,]),'statement':([0,],[2,]),'expression':([1,6,7,9,11,15,25,],[5,12,14,17,18,24,14,]),'subject':([7,25,],[16,16,]),}
 
 _lr_goto = { }
 for _k, _v in _lr_goto_items.items():
@@ -26,14 +26,21 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> statement","S'",1,None,None,None),
-  ('statement -> NAME = expression','statement',3,'p_statement_assign','test.py',55),
-  ('statement -> expression','statement',1,'p_statement_expr','test.py',59),
-  ('expression -> expression + expression','expression',3,'p_expression_binop','test.py',63),
-  ('expression -> expression - expression','expression',3,'p_expression_binop','test.py',64),
-  ('expression -> expression * expression','expression',3,'p_expression_binop','test.py',65),
-  ('expression -> expression / expression','expression',3,'p_expression_binop','test.py',66),
-  ('expression -> - expression','expression',2,'p_expression_uminus','test.py',73),
-  ('expression -> ( expression )','expression',3,'p_expression_group','test.py',77),
-  ('expression -> NUMBER','expression',1,'p_expression_number','test.py',81),
-  ('expression -> NAME','expression',1,'p_expression_name','test.py',85),
+  ('statement -> NAME goal subjects ;','statement',4,'p_statement_assign','first.py',74),
+  ('goal -> expression ;','goal',2,'p_statement_goal','first.py',118),
+  ('goal -> MINUS expression ;','goal',3,'p_statement_goal_uminus','first.py',127),
+  ('subjects -> subject , subjects','subjects',3,'p_subjects_subject','first.py',137),
+  ('subjects -> subject','subjects',1,'p_subjects_subject','first.py',138),
+  ('subject -> expression EQ value','subject',3,'p_statement_subject','first.py',140),
+  ('subject -> expression LT value','subject',3,'p_statement_subject','first.py',141),
+  ('subject -> expression GT value','subject',3,'p_statement_subject','first.py',142),
+  ('subject -> MINUS expression EQ value','subject',4,'p_statement_subject_uminus','first.py',168),
+  ('subject -> MINUS expression LT value','subject',4,'p_statement_subject_uminus','first.py',169),
+  ('subject -> MINUS expression GT value','subject',4,'p_statement_subject_uminus','first.py',170),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','first.py',198),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','first.py',199),
+  ('value -> MINUS value','value',2,'p_value_uminus','first.py',213),
+  ('value -> NUMBER','value',1,'p_value_number','first.py',217),
+  ('expression -> NUMBER NAME','expression',2,'p_expression_name','first.py',222),
+  ('expression -> NAME','expression',1,'p_expression_name','first.py',223),
 ]

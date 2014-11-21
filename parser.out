@@ -3,393 +3,484 @@ Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 Grammar
 
 Rule 0     S' -> statement
-Rule 1     statement -> NAME = expression
-Rule 2     statement -> expression
-Rule 3     expression -> expression + expression
-Rule 4     expression -> expression - expression
-Rule 5     expression -> expression * expression
-Rule 6     expression -> expression / expression
-Rule 7     expression -> - expression
-Rule 8     expression -> ( expression )
-Rule 9     expression -> NUMBER
-Rule 10    expression -> NAME
+Rule 1     statement -> NAME goal subjects ;
+Rule 2     goal -> expression ;
+Rule 3     goal -> MINUS expression ;
+Rule 4     subjects -> subject , subjects
+Rule 5     subjects -> subject
+Rule 6     subject -> expression EQ value
+Rule 7     subject -> expression LT value
+Rule 8     subject -> expression GT value
+Rule 9     subject -> MINUS expression EQ value
+Rule 10    subject -> MINUS expression LT value
+Rule 11    subject -> MINUS expression GT value
+Rule 12    expression -> expression PLUS expression
+Rule 13    expression -> expression MINUS expression
+Rule 14    value -> MINUS value
+Rule 15    value -> NUMBER
+Rule 16    expression -> NUMBER NAME
+Rule 17    expression -> NAME
 
 Terminals, with rules where they appear
 
-(                    : 8
-)                    : 8
-*                    : 5
-+                    : 3
--                    : 4 7
-/                    : 6
-=                    : 1
-NAME                 : 1 10
-NUMBER               : 9
+,                    : 4
+;                    : 1 2 3
+EQ                   : 6 9
+GT                   : 8 11
+LT                   : 7 10
+MINUS                : 3 9 10 11 13 14
+NAME                 : 1 16 17
+NUMBER               : 15 16
+PLUS                 : 12
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 1 2 3 3 4 4 5 5 6 6 7 8
+expression           : 2 3 6 7 8 9 10 11 12 12 13 13
+goal                 : 1
 statement            : 0
+subject              : 4 5
+subjects             : 1 4
+value                : 6 7 8 9 10 11 14
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . statement
-    (1) statement -> . NAME = expression
-    (2) statement -> . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) statement -> . NAME goal subjects ;
 
     NAME            shift and go to state 1
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
 
-    expression                     shift and go to state 6
-    statement                      shift and go to state 4
+    statement                      shift and go to state 2
 
 state 1
 
-    (1) statement -> NAME . = expression
-    (10) expression -> NAME .
+    (1) statement -> NAME . goal subjects ;
+    (2) goal -> . expression ;
+    (3) goal -> . MINUS expression ;
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
 
-    =               shift and go to state 7
-    +               reduce using rule 10 (expression -> NAME .)
-    -               reduce using rule 10 (expression -> NAME .)
-    *               reduce using rule 10 (expression -> NAME .)
-    /               reduce using rule 10 (expression -> NAME .)
-    $end            reduce using rule 10 (expression -> NAME .)
+    MINUS           shift and go to state 6
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
 
+    expression                     shift and go to state 5
+    goal                           shift and go to state 7
 
 state 2
-
-    (7) expression -> - . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
-
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
-    NAME            shift and go to state 8
-
-    expression                     shift and go to state 9
-
-state 3
-
-    (9) expression -> NUMBER .
-
-    +               reduce using rule 9 (expression -> NUMBER .)
-    -               reduce using rule 9 (expression -> NUMBER .)
-    *               reduce using rule 9 (expression -> NUMBER .)
-    /               reduce using rule 9 (expression -> NUMBER .)
-    $end            reduce using rule 9 (expression -> NUMBER .)
-    )               reduce using rule 9 (expression -> NUMBER .)
-
-
-state 4
 
     (0) S' -> statement .
 
 
 
-state 5
+state 3
 
-    (8) expression -> ( . expression )
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (17) expression -> NAME .
 
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
+    ;               reduce using rule 17 (expression -> NAME .)
+    PLUS            reduce using rule 17 (expression -> NAME .)
+    MINUS           reduce using rule 17 (expression -> NAME .)
+    EQ              reduce using rule 17 (expression -> NAME .)
+    LT              reduce using rule 17 (expression -> NAME .)
+    GT              reduce using rule 17 (expression -> NAME .)
+
+
+state 4
+
+    (16) expression -> NUMBER . NAME
+
     NAME            shift and go to state 8
 
-    expression                     shift and go to state 10
+
+state 5
+
+    (2) goal -> expression . ;
+    (12) expression -> expression . PLUS expression
+    (13) expression -> expression . MINUS expression
+
+    ;               shift and go to state 10
+    PLUS            shift and go to state 9
+    MINUS           shift and go to state 11
+
 
 state 6
 
-    (2) statement -> expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (3) goal -> MINUS . expression ;
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
 
-    $end            reduce using rule 2 (statement -> expression .)
-    +               shift and go to state 12
-    -               shift and go to state 11
-    *               shift and go to state 13
-    /               shift and go to state 14
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
 
+    expression                     shift and go to state 12
 
 state 7
 
-    (1) statement -> NAME = . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) statement -> NAME goal . subjects ;
+    (4) subjects -> . subject , subjects
+    (5) subjects -> . subject
+    (6) subject -> . expression EQ value
+    (7) subject -> . expression LT value
+    (8) subject -> . expression GT value
+    (9) subject -> . MINUS expression EQ value
+    (10) subject -> . MINUS expression LT value
+    (11) subject -> . MINUS expression GT value
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
 
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
-    NAME            shift and go to state 8
+    MINUS           shift and go to state 15
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
 
-    expression                     shift and go to state 15
+    subjects                       shift and go to state 13
+    expression                     shift and go to state 14
+    subject                        shift and go to state 16
 
 state 8
 
-    (10) expression -> NAME .
+    (16) expression -> NUMBER NAME .
 
-    +               reduce using rule 10 (expression -> NAME .)
-    -               reduce using rule 10 (expression -> NAME .)
-    *               reduce using rule 10 (expression -> NAME .)
-    /               reduce using rule 10 (expression -> NAME .)
-    $end            reduce using rule 10 (expression -> NAME .)
-    )               reduce using rule 10 (expression -> NAME .)
+    ;               reduce using rule 16 (expression -> NUMBER NAME .)
+    PLUS            reduce using rule 16 (expression -> NUMBER NAME .)
+    MINUS           reduce using rule 16 (expression -> NUMBER NAME .)
+    EQ              reduce using rule 16 (expression -> NUMBER NAME .)
+    LT              reduce using rule 16 (expression -> NUMBER NAME .)
+    GT              reduce using rule 16 (expression -> NUMBER NAME .)
 
 
 state 9
 
-    (7) expression -> - expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (12) expression -> expression PLUS . expression
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
 
-    +               reduce using rule 7 (expression -> - expression .)
-    -               reduce using rule 7 (expression -> - expression .)
-    *               reduce using rule 7 (expression -> - expression .)
-    /               reduce using rule 7 (expression -> - expression .)
-    $end            reduce using rule 7 (expression -> - expression .)
-    )               reduce using rule 7 (expression -> - expression .)
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
 
-  ! +               [ shift and go to state 12 ]
-  ! -               [ shift and go to state 11 ]
-  ! *               [ shift and go to state 13 ]
-  ! /               [ shift and go to state 14 ]
-
+    expression                     shift and go to state 17
 
 state 10
 
-    (8) expression -> ( expression . )
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (2) goal -> expression ; .
 
-    )               shift and go to state 16
-    +               shift and go to state 12
-    -               shift and go to state 11
-    *               shift and go to state 13
-    /               shift and go to state 14
+    MINUS           reduce using rule 2 (goal -> expression ; .)
+    NUMBER          reduce using rule 2 (goal -> expression ; .)
+    NAME            reduce using rule 2 (goal -> expression ; .)
 
 
 state 11
 
-    (4) expression -> expression - . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (13) expression -> expression MINUS . expression
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
 
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
-    NAME            shift and go to state 8
-
-    expression                     shift and go to state 17
-
-state 12
-
-    (3) expression -> expression + . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
-
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
-    NAME            shift and go to state 8
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
 
     expression                     shift and go to state 18
 
+state 12
+
+    (3) goal -> MINUS expression . ;
+    (12) expression -> expression . PLUS expression
+    (13) expression -> expression . MINUS expression
+
+    ;               shift and go to state 19
+    PLUS            shift and go to state 9
+    MINUS           shift and go to state 11
+
+
 state 13
 
-    (5) expression -> expression * . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (1) statement -> NAME goal subjects . ;
 
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
-    NAME            shift and go to state 8
+    ;               shift and go to state 20
 
-    expression                     shift and go to state 19
 
 state 14
 
-    (6) expression -> expression / . expression
-    (3) expression -> . expression + expression
-    (4) expression -> . expression - expression
-    (5) expression -> . expression * expression
-    (6) expression -> . expression / expression
-    (7) expression -> . - expression
-    (8) expression -> . ( expression )
-    (9) expression -> . NUMBER
-    (10) expression -> . NAME
+    (6) subject -> expression . EQ value
+    (7) subject -> expression . LT value
+    (8) subject -> expression . GT value
+    (12) expression -> expression . PLUS expression
+    (13) expression -> expression . MINUS expression
 
-    -               shift and go to state 2
-    (               shift and go to state 5
-    NUMBER          shift and go to state 3
-    NAME            shift and go to state 8
+    EQ              shift and go to state 23
+    LT              shift and go to state 22
+    GT              shift and go to state 21
+    PLUS            shift and go to state 9
+    MINUS           shift and go to state 11
 
-    expression                     shift and go to state 20
 
 state 15
 
-    (1) statement -> NAME = expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (9) subject -> MINUS . expression EQ value
+    (10) subject -> MINUS . expression LT value
+    (11) subject -> MINUS . expression GT value
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
 
-    $end            reduce using rule 1 (statement -> NAME = expression .)
-    +               shift and go to state 12
-    -               shift and go to state 11
-    *               shift and go to state 13
-    /               shift and go to state 14
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
 
+    expression                     shift and go to state 24
 
 state 16
 
-    (8) expression -> ( expression ) .
+    (4) subjects -> subject . , subjects
+    (5) subjects -> subject .
 
-    +               reduce using rule 8 (expression -> ( expression ) .)
-    -               reduce using rule 8 (expression -> ( expression ) .)
-    *               reduce using rule 8 (expression -> ( expression ) .)
-    /               reduce using rule 8 (expression -> ( expression ) .)
-    $end            reduce using rule 8 (expression -> ( expression ) .)
-    )               reduce using rule 8 (expression -> ( expression ) .)
+    ,               shift and go to state 25
+    ;               reduce using rule 5 (subjects -> subject .)
 
 
 state 17
 
-    (4) expression -> expression - expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (12) expression -> expression PLUS expression .
+    (12) expression -> expression . PLUS expression
+    (13) expression -> expression . MINUS expression
 
-    +               reduce using rule 4 (expression -> expression - expression .)
-    -               reduce using rule 4 (expression -> expression - expression .)
-    $end            reduce using rule 4 (expression -> expression - expression .)
-    )               reduce using rule 4 (expression -> expression - expression .)
-    *               shift and go to state 13
-    /               shift and go to state 14
+    ;               reduce using rule 12 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 12 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 12 (expression -> expression PLUS expression .)
+    EQ              reduce using rule 12 (expression -> expression PLUS expression .)
+    LT              reduce using rule 12 (expression -> expression PLUS expression .)
+    GT              reduce using rule 12 (expression -> expression PLUS expression .)
 
-  ! *               [ reduce using rule 4 (expression -> expression - expression .) ]
-  ! /               [ reduce using rule 4 (expression -> expression - expression .) ]
-  ! +               [ shift and go to state 12 ]
-  ! -               [ shift and go to state 11 ]
+  ! PLUS            [ shift and go to state 9 ]
+  ! MINUS           [ shift and go to state 11 ]
 
 
 state 18
 
-    (3) expression -> expression + expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (13) expression -> expression MINUS expression .
+    (12) expression -> expression . PLUS expression
+    (13) expression -> expression . MINUS expression
 
-    +               reduce using rule 3 (expression -> expression + expression .)
-    -               reduce using rule 3 (expression -> expression + expression .)
-    $end            reduce using rule 3 (expression -> expression + expression .)
-    )               reduce using rule 3 (expression -> expression + expression .)
-    *               shift and go to state 13
-    /               shift and go to state 14
+    ;               reduce using rule 13 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 13 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 13 (expression -> expression MINUS expression .)
+    EQ              reduce using rule 13 (expression -> expression MINUS expression .)
+    LT              reduce using rule 13 (expression -> expression MINUS expression .)
+    GT              reduce using rule 13 (expression -> expression MINUS expression .)
 
-  ! *               [ reduce using rule 3 (expression -> expression + expression .) ]
-  ! /               [ reduce using rule 3 (expression -> expression + expression .) ]
-  ! +               [ shift and go to state 12 ]
-  ! -               [ shift and go to state 11 ]
+  ! PLUS            [ shift and go to state 9 ]
+  ! MINUS           [ shift and go to state 11 ]
 
 
 state 19
 
-    (5) expression -> expression * expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (3) goal -> MINUS expression ; .
 
-    +               reduce using rule 5 (expression -> expression * expression .)
-    -               reduce using rule 5 (expression -> expression * expression .)
-    *               reduce using rule 5 (expression -> expression * expression .)
-    /               reduce using rule 5 (expression -> expression * expression .)
-    $end            reduce using rule 5 (expression -> expression * expression .)
-    )               reduce using rule 5 (expression -> expression * expression .)
-
-  ! +               [ shift and go to state 12 ]
-  ! -               [ shift and go to state 11 ]
-  ! *               [ shift and go to state 13 ]
-  ! /               [ shift and go to state 14 ]
+    MINUS           reduce using rule 3 (goal -> MINUS expression ; .)
+    NUMBER          reduce using rule 3 (goal -> MINUS expression ; .)
+    NAME            reduce using rule 3 (goal -> MINUS expression ; .)
 
 
 state 20
 
-    (6) expression -> expression / expression .
-    (3) expression -> expression . + expression
-    (4) expression -> expression . - expression
-    (5) expression -> expression . * expression
-    (6) expression -> expression . / expression
+    (1) statement -> NAME goal subjects ; .
 
-    +               reduce using rule 6 (expression -> expression / expression .)
-    -               reduce using rule 6 (expression -> expression / expression .)
-    *               reduce using rule 6 (expression -> expression / expression .)
-    /               reduce using rule 6 (expression -> expression / expression .)
-    $end            reduce using rule 6 (expression -> expression / expression .)
-    )               reduce using rule 6 (expression -> expression / expression .)
+    $end            reduce using rule 1 (statement -> NAME goal subjects ; .)
 
-  ! +               [ shift and go to state 12 ]
-  ! -               [ shift and go to state 11 ]
-  ! *               [ shift and go to state 13 ]
-  ! /               [ shift and go to state 14 ]
+
+state 21
+
+    (8) subject -> expression GT . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 27
+
+state 22
+
+    (7) subject -> expression LT . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 29
+
+state 23
+
+    (6) subject -> expression EQ . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 30
+
+state 24
+
+    (9) subject -> MINUS expression . EQ value
+    (10) subject -> MINUS expression . LT value
+    (11) subject -> MINUS expression . GT value
+    (12) expression -> expression . PLUS expression
+    (13) expression -> expression . MINUS expression
+
+    EQ              shift and go to state 33
+    LT              shift and go to state 32
+    GT              shift and go to state 31
+    PLUS            shift and go to state 9
+    MINUS           shift and go to state 11
+
+
+state 25
+
+    (4) subjects -> subject , . subjects
+    (4) subjects -> . subject , subjects
+    (5) subjects -> . subject
+    (6) subject -> . expression EQ value
+    (7) subject -> . expression LT value
+    (8) subject -> . expression GT value
+    (9) subject -> . MINUS expression EQ value
+    (10) subject -> . MINUS expression LT value
+    (11) subject -> . MINUS expression GT value
+    (12) expression -> . expression PLUS expression
+    (13) expression -> . expression MINUS expression
+    (16) expression -> . NUMBER NAME
+    (17) expression -> . NAME
+
+    MINUS           shift and go to state 15
+    NUMBER          shift and go to state 4
+    NAME            shift and go to state 3
+
+    subjects                       shift and go to state 34
+    expression                     shift and go to state 14
+    subject                        shift and go to state 16
+
+state 26
+
+    (14) value -> MINUS . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 35
+
+state 27
+
+    (8) subject -> expression GT value .
+
+    ,               reduce using rule 8 (subject -> expression GT value .)
+    ;               reduce using rule 8 (subject -> expression GT value .)
+
+
+state 28
+
+    (15) value -> NUMBER .
+
+    ,               reduce using rule 15 (value -> NUMBER .)
+    ;               reduce using rule 15 (value -> NUMBER .)
+
+
+state 29
+
+    (7) subject -> expression LT value .
+
+    ,               reduce using rule 7 (subject -> expression LT value .)
+    ;               reduce using rule 7 (subject -> expression LT value .)
+
+
+state 30
+
+    (6) subject -> expression EQ value .
+
+    ,               reduce using rule 6 (subject -> expression EQ value .)
+    ;               reduce using rule 6 (subject -> expression EQ value .)
+
+
+state 31
+
+    (11) subject -> MINUS expression GT . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 36
+
+state 32
+
+    (10) subject -> MINUS expression LT . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 37
+
+state 33
+
+    (9) subject -> MINUS expression EQ . value
+    (14) value -> . MINUS value
+    (15) value -> . NUMBER
+
+    MINUS           shift and go to state 26
+    NUMBER          shift and go to state 28
+
+    value                          shift and go to state 38
+
+state 34
+
+    (4) subjects -> subject , subjects .
+
+    ;               reduce using rule 4 (subjects -> subject , subjects .)
+
+
+state 35
+
+    (14) value -> MINUS value .
+
+    ,               reduce using rule 14 (value -> MINUS value .)
+    ;               reduce using rule 14 (value -> MINUS value .)
+
+
+state 36
+
+    (11) subject -> MINUS expression GT value .
+
+    ,               reduce using rule 11 (subject -> MINUS expression GT value .)
+    ;               reduce using rule 11 (subject -> MINUS expression GT value .)
+
+
+state 37
+
+    (10) subject -> MINUS expression LT value .
+
+    ,               reduce using rule 10 (subject -> MINUS expression LT value .)
+    ;               reduce using rule 10 (subject -> MINUS expression LT value .)
+
+
+state 38
+
+    (9) subject -> MINUS expression EQ value .
+
+    ,               reduce using rule 9 (subject -> MINUS expression EQ value .)
+    ;               reduce using rule 9 (subject -> MINUS expression EQ value .)
 
